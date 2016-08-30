@@ -1,0 +1,16 @@
+<ion-view title="WorkItemList" id="page8">
+  <ion-content padding="true" class="has-header">
+    <ion-list id="workItemList-list5">
+      <ion-item id="workItemList-list-item7"><i class="titleP">工程进度</i></ion-item>
+      <ion-item class="item-thumbnail-left item-icon-right" id="main-list-item4"
+                ng-repeat="item in items"
+                ng-click="workItemClickBtn(item)">
+        <img id="itemImg" src="{{item.img}}">
+        <i class="commTitleP">{{item.name}}</i>
+        <i class="addsP">{{item.adds}}</i>
+        <i class="itemProcessTag" ng-repeat="tag in item.tag">{{tag.tag}}</i>
+        <i class="icon" ng-if="item.isFinished"><img src="img/isDone.png"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

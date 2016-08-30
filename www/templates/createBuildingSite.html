@@ -1,0 +1,58 @@
+<ion-view title="CreateBuildingSite" id="page7">
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="submitBtn()">
+      提交
+    </button>
+  </ion-nav-buttons>
+  <ion-content padding="true" class="has-header">
+    <div class="list list-inset">
+      <ion-item>楼盘信息</ion-item>
+      <label class="item item-input">
+        <input type="text" placeholder="请输入楼盘名称">
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="请输入楼盘房号，如一期二单元1208">
+      </label>
+      <ion-item>
+        楼盘装修日期
+      </ion-item>
+      <label class="item item-input">
+        <ionic-datepicker input-obj="datepickerObjectEnd" style="width: 100%">
+          <button class="button button-block button-clear" style="margin: 0px;padding: 0px">
+            {{scheduleDate|date:'yyyy年MM月dd日'}}
+          </button>
+        </ionic-datepicker>
+      </label>
+    </div>
+    <div class="list list-inset">
+      <ion-item>业主信息</ion-item>
+      <label class="item item-input">
+        <input type="text" placeholder="业主姓名">
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="联系方式">
+      </label>
+    </div>
+
+    <div class="list siteDiv">
+      <div class="item item-divider">
+        装修风格：{{data.siteType}}
+      </div>
+      <ion-radio ng-repeat="item in siteTypeList"
+                 ng-value="item.value"
+                 ng-model="data.siteType">
+        <ion-item> {{ item.text }}</ion-item>
+      </ion-radio>
+      <div class="item item-divider">
+        装修预算: {{ data.siteBudget }}
+      </div>
+      <ion-radio ng-repeat="item in siteBudgetList"
+                 ng-value="item.value"
+                 ng-model="data.siteBudget"
+                 ng-change="serverSideChange(item)"
+                 name="siteBudget">
+        <ion-item> {{ item.text }}</ion-item>
+      </ion-radio>
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,51 @@
+<ion-view title="CreateCommunity" id="page5">
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="submitBtn()">
+      提交
+    </button>
+  </ion-nav-buttons>
+  <ion-content padding="true" class="has-header">
+    <div class="list list-inset">
+      <ion-item>小区名称</ion-item>
+      <label class="item item-input">
+        <input type="text" placeholder="请输入小区名称">
+      </label>
+    </div>
+    <div class="list list-inset">
+      <ion-item>小区地址</ion-item>
+      <!--<ionic-city-picker options='vm.CityPickData1'></ionic-city-picker>-->
+      <label class="item item-input">
+        <input type="text" placeholder="小区详细地址">
+      </label>
+    </div>
+    <!--<ionic-city-picker options='vm.CityPickData1'></ionic-city-picker>-->
+    <!--<ionic-city-picker options='vm.CityPickData2'></ionic-city-picker>-->
+    <!--<ionic-city-picker options='vm.CityPickData3'></ionic-city-picker>-->
+    <!--<ionic-city-picker options='vm.CityPickData4'></ionic-city-picker>-->
+    <!--<div class="button button-positive button-block" ng-click="vm.change()">-->
+    <!--修改城市-->
+    <!--</div>-->
+    <!--<div class="button button-positive button-block" ng-click="vm.sync()">-->
+    <!--同步{{vm.CityPickData2.areaData}}-->
+    <!--</div>-->
+    <div class="list list-inset">
+      <ion-item>交房日期</ion-item>
+      <label class="item item-input">
+        <!--<p>交房日期：</p>-->
+        <ionic-datepicker input-obj="datepickerObjectEnd" style="width: 100%">
+          <button class="button button-block button-clear" style="margin: 0px;padding: 0px">
+            {{scheduleDate|date:'yyyy年MM月dd日'}}
+          </button>
+        </ionic-datepicker>
+      </label>
+    </div>
+    <div class="list list-inset">
+      <ion-item>小区入住类型（可多选）</ion-item>
+      <ion-checkbox ng-repeat="item in commTypeList"
+                    ng-model="item.checked"
+                    ng-checked="item.checked">
+        {{ item.text }}
+      </ion-checkbox>
+    </div>
+  </ion-content>
+</ion-view>

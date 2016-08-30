@@ -1,0 +1,39 @@
+<ion-view title="CaseDetail" id="page14">
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="goBackToMainBtn()">
+      回到主页
+    </button>
+  </ion-nav-buttons>
+  <div class=" list list-inset" style="top: 40px">
+    <ion-item>楼盘装修信息</ion-item>
+    <ion-item class="item-thumbnail-left item-icon-right" id="main-list-item4"
+              ng-repeat="item in items"
+              ng-click="buildSiteItemClickBtn(item.id,item.workingProcess)">
+      <img id="itemImg" src="{{item.avatarImg}}">
+      <i class="commTitleP">{{item.name}}</i>
+      <i class="addsP">{{item.adds}}</i>
+      <i class="addsP">开工时间：{{item.time}}</i>
+      <i class="addsP">装修周期：{{item.period}}</i>
+      <i class="addsP">装修方式：{{item.type}}</i>
+      <i class="addsP">装修价格：{{item.price}}</i>
+      <i class="commDescTag" ng-repeat="tag in item.tag">{{tag.tag}}</i>
+      <i class="siteProcessTag">{{item.workingProcess}}</i>
+      <span class="badge badge-assertive">{{item.owner}}</span>
+    </ion-item>
+  </div>
+  <ion-content padding="true" class="has-header" style="top: 350px">
+    <div>
+      <ion-item>施工流程</ion-item>
+      <div class="sideProcessDiv">
+        <ion-item class="item-icon-left" ng-repeat="pro in processList" style="padding-left: 35px;padding-right: 0px;" ng-click="sideProcessClickBtn(pro)">
+          <i class="icon ion-ios-circle-outline" style="font-size: 15px;padding-right: 0px;padding-left: 0px;margin-left: 0px;left: 0px"></i>
+          <p style="padding-left: -10px">{{pro.name}}</p>
+          <!--<img src="{{pro.url}}">-->
+        </ion-item>
+      </div>
+      <div class="mainProcessDiv">
+        <ion-item ng-repeat="img in imgs"><img src="{{img.url}}"></ion-item>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

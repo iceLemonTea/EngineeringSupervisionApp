@@ -1,0 +1,24 @@
+<ion-view title="WorkChecked" id="page12">
+  <ion-content padding="true" class="has-header" delegate-handle="checkedHandle">
+    <div class="list card">
+      <div class="item item-avatar">
+        <img src="{{workerInfo.avatar}}">
+        <h2>工人姓名：{{workerInfo.name}}</h2>
+        <p>提交时间：{{workerInfo.submitTime}}</p>
+      </div>
+      <div class="item item-body" ng-repeat="img in imgList">
+        <img class="full-image" src="{{img.src}}">
+        <div class="item tabs tabs-secondary tabs-icon-right">
+          <a class="tab-item" href="#" ng-click="deleteImg(img)">
+            <i class="icon ion-ios-trash"></i>
+            删除
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="button-bar button-block">
+      <a class="button button-balanced" ng-click="checked(0)">通过</a>
+      <a class="button button-assertive" ng-click="checked(1)">不通过</a>
+    </div>
+  </ion-content>
+</ion-view>

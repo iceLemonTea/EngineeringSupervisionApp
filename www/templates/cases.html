@@ -1,0 +1,16 @@
+<ion-view title="Cases" id="page3">
+    <ion-content padding="true" class="has-header">
+      <ion-list id="main-list3">
+        <ion-item class="item-icon-right" id="main-list-item3"><i class="titleP">已完工小区列表</i>
+        </ion-item>
+        <ion-item class="item-thumbnail-left item-icon-right" id="main-list-item4" ng-repeat="item in items"
+                  ng-click="communityItemClickBtn(item.id)">
+          <img id="itemImg" src="{{item.img}}">
+          <i class="commTitleP">{{item.name}}</i>
+          <i class="addsP">{{item.adds}}</i>
+          <i class="commDescTag" ng-repeat="tag in item.tag">{{tag.tag}}</i>
+          <span class="badge badge-assertive">{{item.siteNum}}</span>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+</ion-view>

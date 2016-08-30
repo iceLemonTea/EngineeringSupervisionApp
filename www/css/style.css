@@ -1,0 +1,150 @@
+/*列表的标题样式*/
+.titleP {
+  font-size: 20px;
+  display: inline;
+  color: #2a2a2a;
+  font-weight: 800;
+}
+
+.commTitleP {
+  color: #2a2a2a;
+  font-weight: bold
+}
+
+/*地址信息的样式*/
+.addsP {
+  display: block;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-size: 12px;
+  width: 200px;
+  font-weight: 400;
+  color: #666;
+}
+
+.nameP {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-size: 12px;
+  width: 200px;
+  font-weight: 400;
+  color: #666;
+}
+
+/*列表项的图片*/
+#itemImg {
+  /*border-radius: 10px;*/
+}
+/*小区标签的样式*/
+.tagCommP {
+  font-size: xx-small;
+  float: left;
+}
+
+/*小区描述标签的样式*/
+.commDescTag {
+  margin-bottom: 10px;
+  margin-right: 5px;
+  font-weight: normal;
+  vertical-align: 1px;
+  line-height: 20px;
+  padding: 0 4px 0 5px;
+  font-size: small;
+  display: inline-block;
+  border-radius: 3px;
+  color: #fff;
+  background-color: #09f;
+}
+
+/*项目进度描述标签的样式*/
+.itemProcessTag {
+  top: 20px;
+  position: inherit;
+  margin-bottom: 10px;
+  margin-right: 5px;
+  font-weight: normal;
+  vertical-align: 1px;
+  line-height: 20px;
+  padding: 0 4px 0 5px;
+  font-size: small;
+  display: inline-block;
+  border-radius: 3px;
+  color: #fff;
+  background-color: #09f;
+}
+
+/*工地进度描述标签的样式*/
+.siteProcessTag {
+  margin-right: 5px;
+  font-weight: normal;
+  vertical-align: 1px;
+  line-height: 20px;
+  padding: 0 4px 0 5px;
+  font-size: small;
+  display: inline-block;
+  border-radius: 3px;
+  color: #fff;
+  background-color: #4acd94;
+}
+/*工人列表的单选列表的选中图标，样式重载*/
+.item-radio .radio-icon {
+  padding-right: 10px;
+  padding-left: 2px;
+  padding-top: 30px;
+}
+/*工人列表的单选列表，样式重载*/
+.item-radio .item-content {
+  padding: 0px;
+}
+/*工地列表的单选列表的选中图标，样式重载*/
+.siteDiv .item-radio .radio-icon {
+  padding-right: 10px;
+  padding-left: 2px;
+  padding-top: 10px;
+}
+
+/*badag风格重载*/
+.item .badge {
+  top: 35px;
+  right: 15px;
+  background-color: #fe7242;
+}
+/*重载item的颜色，从而让右上角的+号变为蓝色*/
+.item {
+  color: #09f;
+}
+
+.sideProcessDiv {
+  width: 30%;
+  height: 200px;
+  background-color: #4b8bf4;
+  float: left;
+}
+.mainProcessDiv {
+  width: 70%;
+  height: 100px;
+  background-color: #0c63ee;
+  float: right;
+}
+/*.sideProcessDiv .item {*/
+  /*padding: 5px;*/
+/*}*/
+
+.eventListPicture{
+  width:33%;
+  height:180px;
+  display:inline-block;
+  background-size: cover;
+  color:#fff;
+  text-decoration: none;
+}
+.eventListPicture h2{
+  font-size: 16px;
+  color: #000;
+  margin: 20px 20px 10px 20px;
+}
+.eventListPicture h3{
+  font-size: 16px;
+  color: #000;
+  margin: 0px 20px 0px 20px;
+}

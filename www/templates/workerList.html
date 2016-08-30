@@ -1,0 +1,24 @@
+<ion-view title="WorkerList" id="page9">
+  <ion-nav-buttons side="right">
+    <button class="button button-positive" ng-click="submitBtn()">
+      提交
+    </button>
+  </ion-nav-buttons>
+  <ion-content padding="true" class="has-header">
+    <ion-list id="workerList-list6">
+      <ion-item class="item-icon-right" id="workerList-list-item11"><i class="titleP">工人列表</i>
+        <i class="icon ion-android-add" ng-click="createWorkerBtn()"></i>
+      </ion-item>
+      <ion-radio ng-repeat="item in items"
+                 ng-value="item.value"
+                 ng-click="workerItemClickBtn(item)">
+        <ion-item class="item item-thumbnail-left item-icon-right" style="border: hidden;background-color: transparent">
+          <img id="itemImg" src="{{item.img}}">
+          <i class="commTitleP">{{item.name}} （{{item.workAge}}年从业经验）</i>
+          <i class="addsP">{{item.adds}}</i>
+          <i class="siteProcessTag" ng-repeat="tag in item.tag">{{tag.tag}}</i>
+        </ion-item>
+      </ion-radio>
+    </ion-list>
+  </ion-content>
+</ion-view>

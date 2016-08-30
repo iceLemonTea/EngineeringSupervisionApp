@@ -1,0 +1,24 @@
+<ion-view title="CreateWorker" id="page10">
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="submitBtn()">
+      提交
+    </button>
+  </ion-nav-buttons>
+  <ion-content padding="true" class="has-header">
+    <div class="list list-inset">个人信息
+      <label class="item item-input">
+        <input type="text" placeholder="姓名">
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="联系方式">
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="籍贯">
+      </label>
+    </div>
+    <div class=" list list-inset">工作经历
+      <ion-item ng-click="selectedWorkerLevel()">级别：{{workerInfo.level}}</ion-item>
+      <ion-item ng-click="selectedWorkerTime()">工龄：{{workerInfo.time}}</ion-item>
+    </div>
+  </ion-content>
+</ion-view>

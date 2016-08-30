@@ -1,0 +1,23 @@
+<ion-view title="CaseBuildingSite" id="page13">
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="goBackToMainBtn()">
+      回到主页
+    </button>
+  </ion-nav-buttons>
+    <ion-content padding="true" class="has-header">
+      <ion-list id="buildingSiteList-list4">
+        <ion-item class="item-icon-right" id="buildingSiteList-list-item5"><i class="titleP">已完工装修工地</i>
+        </ion-item>
+        <ion-item class="item-thumbnail-left item-icon-right" id="main-list-item4"
+                  ng-repeat="item in items"
+                  ng-click="buildSiteItemClickBtn(item.id,item.workingProcess)">
+          <img id="itemImg" src="{{item.avatarImg}}">
+          <i class="commTitleP">{{item.name}}</i>
+          <i class="addsP">{{item.adds}}</i>
+          <i class="commDescTag" ng-repeat="tag in item.tag">{{tag.tag}}</i>
+          <i class="siteProcessTag">{{item.workingProcess}}</i>
+          <span class="badge badge-assertive">{{item.owner}}</span>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+</ion-view>
