@@ -1,27 +1,17 @@
 <ion-view title="WorkDone" id="page11">
   <ion-content padding="true" class="has-header">
     <div class="list">
-      <a ng-repeat="Event in eventList" type="item-text-wrap"style="background-image:url('{{ Event.picture }}');" class="eventListPicture">
-        <h2>{{ Event.name }}</h2>
-        <h3>{{ Event.StartDay|date:'shortDate'  }} {{ 'AT'  }} {{ Event.TheTime|date:'shortTime' }}</h3>
-        <h3>{{ Event.fromMe }}</h3>
+      <i class="item">提示：<br>请添加施工图片(最少四张)<br> 上传错误或失败请返回并重新上传</i>
+      <a ng-repeat="img in images_list" type="item-text-wrap" style="background-image:url('{{ img.src }}');"
+         class="eventListPicture">
       </a>
-    </div>
-    <div class="list">
-      <div class="item" ng-repeat="img in images_list">
-        <img src="{{img.src}}" width="30%">
+      <div class="button button-clear"
+           style="width: 80px;height: 80px;max-height: 80px;background-image: url('../img/plus.png')"
+      ng-click="addImage()" ng-if="isImageEmpty">
       </div>
     </div>
-    <div class="list card">
-      <div class="item item-body">
-        <img class="full-image" src="{{imgSrc}}">
-      </div>
-    </div>
-    <button class="button button-full button-positive" ng-click="listTest()">
-      拍照
-    </button>
-    <button class="button button-full button-positive" ng-click="pickImage()">
-      相册
+    <button class="button button-full button-balanced" ng-click="uploadImage()" ng-if="!isImageEmpty">
+      上传
     </button>
   </ion-content>
 </ion-view>

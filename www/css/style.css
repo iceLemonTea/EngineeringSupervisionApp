@@ -13,13 +13,16 @@
 
 /*地址信息的样式*/
 .addsP {
+  /*white-space: normal;*/
   display: block;
   margin-bottom: 10px;
   margin-top: 10px;
   font-size: 12px;
-  width: 200px;
+  width: 180px;
   font-weight: 400;
   color: #666;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .nameP {
@@ -131,12 +134,13 @@
 /*}*/
 
 .eventListPicture{
-  width:33%;
-  height:180px;
+  width:80px;
+  height:80px;
   display:inline-block;
   background-size: cover;
   color:#fff;
   text-decoration: none;
+  margin-top: 10px;
 }
 .eventListPicture h2{
   font-size: 16px;

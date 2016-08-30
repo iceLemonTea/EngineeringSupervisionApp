@@ -9,9 +9,9 @@
       <ion-item class="item-icon-right" id="buildingSiteList-list-item5"><i class="titleP">装修工地</i>
         <i class="icon ion-android-add" ng-click="createBuildingSiteBtn()"></i>
       </ion-item>
-      <ion-item class="item-thumbnail-left item-icon-right" id="main-list-item4" ui-sref="workItemList"
+      <ion-item class="item-thumbnail-left item-icon-right" id="main-list-item4"
                 ng-repeat="item in items"
-                ng-click="buildSiteItemClickBtn(item.id,item.workingProcess)">
+                ng-click="buildSiteItemClickBtn(item)">
         <img id="itemImg" src="{{item.avatarImg}}">
         <i class="commTitleP">{{item.name}}</i>
         <i class="addsP">{{item.adds}}</i>

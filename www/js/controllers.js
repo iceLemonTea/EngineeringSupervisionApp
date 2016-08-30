@@ -1,14 +1,10 @@
 angular.module('app.controllers', [])
 
-  .controller('mainCtrl', ['$scope', '$stateParams', '$state','$ionicHistory' ,// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+  .controller('mainCtrl', ['$scope', '$stateParams', '$state', '$ionicHistory', 'LocalStorageService',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-    function ($scope, $stateParams, $state,$ionicHistory) {
-      // Form data for the login modal
-      $scope.imgSrc = "";
-      //TODO:检测本地是否已经登录，如果登录，则使用登录信息获取相应的用户信息和小区列表
-      //工长还是工人的标识符
-      $scope.UserType = 1;//0:工人：1：工长，根据用户类型设置后续的平台流程
+    function ($scope, $stateParams, $state, $ionicHistory, LocalStorageService) {
+      //$scope.UserType = 1;
       // Open the login modal
       $scope.login = function () {
         $state.go('login', {}, {});
@@ -16,9 +12,12 @@ angular.module('app.controllers', [])
           disableBack: true
         });
       };
-
-      //工长还是工人的标识符
-      $scope.UserType = 1;//0:工人：1：工长
+      //TODO:检测本地是否已经登录，如果登录，则使用登录信息获取相应的用户信息和小区列表
+      $scope.userInfo = LocalStorageService.getUserInfo();//0:工人：1：工长，根据用户类型设置后续的平台流程
+      if ($scope.userInfo == 0) {//本地没有用户登录数据
+        $scope.login();
+      }
+      //TODO:《接口》根据用户ID，获取用户名下的小区列表
       //小区信息数组
       $scope.items = [{
         id: 1,
@@ -29,34 +28,57 @@ angular.module('app.controllers', [])
         tag: [{tag: "普通住宅"}, {tag: "商铺"}, {tag: "办公室"}, {tag: "别墅"}]
       },
         {
-          id: 1,
+          id: 2,
           name: "英俊年华国际社区",
           adds: "航天大道与神舟六路交汇处向南500米",
           img: "img/commImg.jpg",
           siteNum: 1,
           tag: [{tag: "普通住宅"}, {tag: "商铺"}, {tag: "办公室"}, {tag: "别墅"}]
         }];
+      //创建小区按钮点击函数
+      $scope.createCommunity = function () {
+        $state.go('createCommunity', {userInfo: $scope.userInfo}, {});
+      }
 
+      //小区列表条目点击函数
       $scope.communityItemClickBtn = function (commId) {
-        $state.go('buildingSiteList', {id: commId}, {});
+        //传递参数包括，小区id（commId）,用户类型（$scope.userInfo.userType）
+        $state.go('buildingSiteList', {id: commId, userInfo: $scope.userInfo}, {});
       };
-
+      //案例按钮点击函数
       $scope.toCasesBtn = function () {
         $state.go('cases');
       };
-
+      //个人账户按钮点击函数
       $scope.toAccountBtn = function () {
         $state.go('account');
       };
 
     }])
 
-  .controller('loginCtrl', ['$scope', '$stateParams','$state','$ionicHistory', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+  .controller('loginCtrl', ['$scope', '$stateParams', '$state', '$ionicHistory', 'LocalStorageService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-    function ($scope, $stateParams,$state,$ionicHistory) {
+    function ($scope, $stateParams, $state, $ionicHistory, LocalStorageService) {
+
+      $scope.user = {
+        userName: null,
+        passwd: null,
+        licsenceCode: null
+      }
+
       $scope.loginBtn = function () {
-        //TODO:登陆接口获取相应参数
+        if ($scope.user.passwd == null) {
+          //工人类型用户登录
+
+        } else {
+          //工长类型用户登录
+
+        }
+        //TODO:《接口》登陆接口获取相应参数
+        //将用户数据本地持久化
+        $scope.userInfo = {name: $scope.user.userName, userType: "1"};
+        LocalStorageService.setUserInfo($scope.userInfo);
         //跳转到主页面
         $state.go('main', {}, {});
         $ionicHistory.nextViewOptions({
@@ -102,6 +124,15 @@ angular.module('app.controllers', [])
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
     function ($scope, $stateParams, $ionicHistory, datePickerService, $state) {
+      //获取用户信息
+      $scope.userInfo = $stateParams.userInfo;
+      //小区功能描述复选列表
+      $scope.commTypeList = [
+        {text: "普通住宅", checked: true},
+        {text: "商铺", checked: false},
+        {text: "办公室", checked: false},
+        {text: "别墅", checked: false}
+      ];
       //初始化交房日期
       $scope.scheduleDate = new Date();
       //===============时间组件的一些配置 start=============
@@ -112,7 +143,6 @@ angular.module('app.controllers', [])
       var datePickerCallbacke = function (val) {
         if (typeof (val) === 'undefined') {
         } else {
-          console.log('Selected date is : ', val);
           $scope.scheduleDate = val;//更新日期。
         }
       };
@@ -144,27 +174,28 @@ angular.module('app.controllers', [])
       //===============时间组件的一些配置 end=============
 
       //===============城市选择组件的一些配置 start=============
-      var vm = $scope.vm = {};
-      vm.cb = function () {
-        console.log(vm.CityPickData1.areaData)
-        //console.log(vm.CityPickData2.areaData)
-        //console.log(vm.CityPickData3.areaData)
-        //console.log(vm.CityPickData4.areaData)
-      }
-      //例1
-      vm.CityPickData1 = {
-        areaData: [],
-        backdrop: true,
-        backdropClickToClose: true,
-        defaultAreaData: ['陕西', '西安', '雁塔区'],
-        buttonClicked: function () {
-          vm.cb()
-        },
-        tag: '-',
-        //iconClass: 'ion-location',
-        title: '所属区域'
-      };
       /*
+       var vm = $scope.vm = {};
+       vm.cb = function () {
+       console.log(vm.CityPickData1.areaData)
+       //console.log(vm.CityPickData2.areaData)
+       //console.log(vm.CityPickData3.areaData)
+       //console.log(vm.CityPickData4.areaData)
+       }
+       //例1
+       vm.CityPickData1 = {
+       areaData: [],
+       backdrop: true,
+       backdropClickToClose: true,
+       defaultAreaData: ['陕西', '西安', '雁塔区'],
+       buttonClicked: function () {
+       vm.cb()
+       },
+       tag: '-',
+       //iconClass: 'ion-location',
+       title: '所属区域'
+       };
+
        //例2
        vm.CityPickData2 = {
        areaData: ['请选择城市'],
@@ -191,11 +222,12 @@ angular.module('app.controllers', [])
        console.log('sync')
        vm.CityPickData4.areaData = vm.CityPickData2.areaData
        }
+
+       //===============城市选择组件的一些配置 end=============
        */
-      //===============城市选择组件的一些配置 end=============
 
       $scope.submitBtn = function () {
-        //将创建的小区提交到服务器
+        //TODO:《接口》将创建的小区提交到服务器
 
         //返回到上一级菜单
         $state.go('main', {}, {});
@@ -204,20 +236,15 @@ angular.module('app.controllers', [])
       $ionicHistory.nextViewOptions({
         disableBack: true
       });
-      $scope.commTypeList = [
-        {text: "普通住宅", checked: true},
-        {text: "商铺", checked: false},
-        {text: "办公室", checked: false},
-        {text: "别墅", checked: false}
-      ];
     }])
 
   .controller('buildingSiteListCtrl', ['$scope', '$stateParams', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
     function ($scope, $stateParams, $state) {
-      //楼盘工地所属小区的id-从上一级页面获取
+      //楼盘工地所属小区的id-,以及用户信息从上一级页面获取
       $scope.commId = $stateParams.id;
+      $scope.userInfo = $stateParams.userInfo;
       //通过小区id，获取楼盘工地信息列表items
       $scope.items = [{
         id: 1,
@@ -240,11 +267,15 @@ angular.module('app.controllers', [])
           workingProcess: "瓦工进场"
         }];
       $scope.createBuildingSiteBtn = function () {
-        $state.go('createBuildingSite', {id: $scope.commId}, {});
+        $state.go('createBuildingSite', {id: $scope.commId, userInfo: $scope.userInfo}, {});
       };
 
-      $scope.buildSiteItemClickBtn = function (siteId, siteProcess) {
-        $state.go('workItemList', {id: siteId, siteProcess: siteProcess}, {});
+      $scope.buildSiteItemClickBtn = function (siteInfo) {
+        if ($scope.userInfo.userType == '0') {//如果是工人，则直接上传页面
+          $state.go('workDone', {siteInfo: siteInfo, user: $scope.userInfo}, {});
+        } else {//如果是工长，则进入工序选择页面
+          $state.go('workItemList', {siteInfo: siteInfo, user: $scope.userInfo}, {});
+        }
       };
     }])
 
@@ -252,7 +283,30 @@ angular.module('app.controllers', [])
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
     function ($scope, $stateParams, datePickerService, $ionicHistory) {
+      //上一页面传递的参数
       $scope.commId = $stateParams.id;
+      $scope.userInfo = $stateParams.userInfo;
+      //工地装修风格的列表
+      $scope.siteTypeList = [
+        {text: "现代简约", value: "现代简约"},
+        {text: "地中海", value: "地中海"},
+        {text: "中式", value: "中式"},
+        {text: "欧式", value: "欧式"}
+      ];
+      $scope.siteBudgetList = [
+        {text: "简装", value: "简装"},
+        {text: "中等", value: "中等"},
+        {text: "豪装", value: "豪装"},
+      ];
+      //默认选择装修风格的参数,同时双向绑定了单选框，随着单选框内数据变化而变化
+      $scope.data = {
+        siteType: '现代简约',
+        siteBudget: '简装'
+      };
+      //单选框内容变化处理函数（暂未使用）
+      $scope.siteBudgetChange = function (item) {
+        console.log("Selected siteBudget, text:", item.text, "value:", item.value);
+      };
       //初始化交房日期
       $scope.scheduleDate = new Date();
       //初始化日期变量
@@ -293,30 +347,10 @@ angular.module('app.controllers', [])
         }
       };
       $scope.submitBtn = function () {
-        //将创建的楼盘信息提交到服务器
+        //TODO:《接口》将创建的楼盘信息提交到服务器
 
         //返回到上一级菜单
         $ionicHistory.goBack(-1);
-      };
-
-      $scope.siteTypeList = [
-        {text: "现代简约", value: "现代简约"},
-        {text: "地中海", value: "地中海"},
-        {text: "中式", value: "中式"},
-        {text: "欧式", value: "欧式"}
-      ];
-      $scope.siteBudgetList = [
-        {text: "简装", value: "简装"},
-        {text: "中等", value: "中等"},
-        {text: "豪装", value: "豪装"},
-      ];
-      $scope.data = {
-        siteType: '现代简约',
-        siteBudget: '简装'
-      };
-
-      $scope.siteBudgetChange = function (item) {
-        console.log("Selected siteBudget, text:", item.text, "value:", item.value);
       };
     }])
 
@@ -324,7 +358,11 @@ angular.module('app.controllers', [])
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
     function ($scope, $stateParams, $state, $ionicActionSheet, $timeout) {
-      $scope.siteId = $stateParams.id;
+      //上一页面传递的参数
+      $scope.siteInfo = $stateParams.siteInfo;
+      $scope.userInfo = $stateParams.userInfo;
+      //TODO:《接口》根据工地id，获取工地当前的进度说明
+
       //根据楼盘施工进度isFinished，从而对施工项目进行排版，已完成的项目右侧显示“已完成”
       $scope.items = [{id: 1, name: "1. 水电", img: "img/workItem/yx01.gif", tag: [{tag: "上传施工图"}], isFinished: true},
         {id: 2, name: "2. 木工-吊顶", img: "img/workItem/yx03.gif", tag: [{tag: "进度审核"}], isFinished: true},
@@ -334,7 +372,7 @@ angular.module('app.controllers', [])
       //列表条目点击按钮
       $scope.workItemClickBtn = function (item) {
         if (item.isFinished == false) {//暂未施工的，将进入工人页面，挑选工人
-          $state.go('workerList', {id: item.id, siteId: $scope.siteId}, {})
+          $state.go('workerList', {id: item.id, siteInfo: $scope.siteInfo, user: $scope.userInfo}, {});
         } else {//施工完成，则弹出上拉菜单，选择上传图片还是审核
           $scope.showActionSheet();
         }
@@ -354,9 +392,9 @@ angular.module('app.controllers', [])
           },
           buttonClicked: function (index) {
             if (index == 0) {//上传图片
-              $state.go('workDone', {id: $scope.siteId, siteProcess: $scope.siteProcess}, {})
+              $state.go('workDone', {siteInfo: $scope.siteInfo, user: $scope.userInfo}, {})
             } else if (index == 1) {//审核项目
-              $state.go('workChecked', {id: $scope.siteId, siteProcess: $scope.siteProcess}, {})
+              $state.go('workChecked', {siteInfo: $scope.siteInfo, user: $scope.userInfo}, {})
             }
             return true;
           }
@@ -371,8 +409,12 @@ angular.module('app.controllers', [])
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
     function ($scope, $stateParams, $state, $ionicHistory) {
-      $scope.siteProcess = $stateParams.siteProcess;
-      //通过当前选中的工程项目（如木工，瓦工），获取相应的工人资料
+      //上一页面传递的参数
+      $scope.processId = $stateParams.id;
+      $scope.siteInfo = $stateParams.siteInfo;
+      $scope.userInfo = $stateParams.userInfo;
+
+      //TODO:《接口》通过当前选中的工程项目（如木工，瓦工）processId，获取相应的工人资料
       $scope.items = [{
         id: 1,
         name: "王工",
@@ -391,7 +433,7 @@ angular.module('app.controllers', [])
         }];
 
       $scope.submitBtn = function () {
-        //提交工作信息，包括工人，项目，工地以及小区
+        //TODO:《接口》提交工作信息，包括工人，项目，工地以及小区
         //如果选中了工人，则跳转到主菜单页面
         $state.go('main', {}, {});
         //未选中工人，则提示工长选择工人后提交
@@ -401,7 +443,7 @@ angular.module('app.controllers', [])
       };
 
       $scope.createWorkerBtn = function () {
-        $state.go('createWorker', {}, {});
+        $state.go('createWorker', {siteInfo: $scope.siteInfo, user: $scope.userInfo}, {});
       };
 
       $scope.workerItemClickBtn = function (item) {
@@ -414,12 +456,17 @@ angular.module('app.controllers', [])
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
     function ($scope, $stateParams, $ionicHistory, $ionicActionSheet, $timeout) {
-      $scope.submitBtn = function () {
-        //将创建的工人信息提交到服务器
+      //上一页面传递的参数
+      $scope.siteInfo = $stateParams.siteInfo;
+      $scope.userInfo = $stateParams.userInfo;
 
+      //将创建的工人信息提交到服务器
+      $scope.submitBtn = function () {
+        //TODO:《接口》将创建的工人信息提交到服务器
         //返回到上一级菜单
         $ionicHistory.goBack(-1);
       };
+      //工人的部分默认选项，双向绑定，获取选定的值
       $scope.workerInfo = {
         level: null,
         time: null
@@ -484,45 +531,60 @@ angular.module('app.controllers', [])
       };
     }])
 
-  .controller('workDoneCtrl', ['$scope', '$stateParams','$ionicModal', '$timeout', '$cordovaImagePicker','$cordovaCamera' ,// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+  .controller('workDoneCtrl', ['$scope', '$stateParams', '$ionicModal', '$timeout', '$cordovaImagePicker', '$cordovaCamera', '$ionicActionSheet',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-    function ($scope, $stateParams, $ionicModal, $timeout, $cordovaImagePicker,$cordovaCamera) {
+    function ($scope, $stateParams, $ionicModal, $timeout, $cordovaImagePicker, $cordovaCamera, $ionicActionSheet) {
 
-      $scope.eventList = [];
-
-      var NewEvent = function() {
-        return {
-          "name" : '',
-          "StartDay" : new Date(),
-          "TheTime" : new Date(),
-          "fromMe" : '',
-          "picture" : ''
-        };
-      };
-
-      for( i=1; i < 5; i++) {
-        var event = new NewEvent();
-        event.name = 'Event ' + i;
-        event.picture = '../img/checked/sd' + i + '.jpg'
-
-        $scope.eventList.push( event );
-      }
-
-      $scope.myTitle = 'Template';
-
+      //楼盘工地所属小区的id-,以及用户信息从上一级页面获取
+      $scope.userInfo = $stateParams.userInfo;
+      $scope.siteInfo = $stateParams.siteInfo;
+      //初始化页面图片列表变量
       $scope.images_list = [];
       $scope.imageNum = 0;
       $scope.imgSrc = "";
-      //list test
+      $scope.isImageEmpty = true;
+      $scope.addImage = function () {
+        //让工长选择上传图片，还是审核
+        var hideSheet = $ionicActionSheet.show({
+          buttons: [
+            {text: '<b>拍照上传</b>'},
+            {text: '<b>从相册中选取</b>'}
+          ],
+          //destructiveText: 'Delete',
+          titleText: '选择操作',
+          cancelText: 'Cancel',
+          cancel: function () {
+            // add cancel code..
+          },
+          buttonClicked: function (index) {
+            if (index == 0) {//拍照上传
+              $scope.takePhoto();
+            } else if (index == 1) {//从相册中选取
+              $scope.pickImage();
+            }
+            return true;
+          }
+        });
+        $timeout(function () {
+          hideSheet();
+        }, 2000);
 
+      }
+      //test for image list
       $scope.listTest = function () {
-        var image = {id:$scope.imageNum,src:"../img/avatarImg.jpg"};
+        var image = {id: $scope.imageNum, src: "../img/avatarImg.jpg"};
         $scope.images_list.push(image);
+        $scope.imageNum++;
+        if ($scope.imageNum == 4) {
+          $scope.isImageEmpty = false;
+        }
       };
+      $scope.uploadImage = function () {
+        //TODO:《接口》批量上传图片
+      }
       //image picker
       $scope.pickImage = function () {
-        console.log("haha");
         var options = {
           maximumImagesCount: 1,
           width: 800,
@@ -539,26 +601,26 @@ angular.module('app.controllers', [])
           });
       };
 
-      $scope.takePhoto=function(){
+      $scope.takePhoto = function () {
         var options = {
           //这些参数可能要配合着使用，比如选择了sourcetype是0，destinationtype要相应的设置
           quality: 100,                                            //相片质量0-100
           destinationType: Camera.DestinationType.FILE_URI,        //返回类型：DATA_URL= 0，返回作为 base64 編碼字串。 FILE_URI=1，返回影像档的 URI。NATIVE_URI=2，返回图像本机URI (例如，資產庫)
           sourceType: Camera.PictureSourceType.CAMERA,             //从哪里选择图片：PHOTOLIBRARY=0，相机拍照=1，SAVEDPHOTOALBUM=2。0和1其实都是本地图库
           allowEdit: false,                                        //在选择之前允许修改截图
-          encodingType:Camera.EncodingType.JPEG,                   //保存的图片格式： JPEG = 0, PNG = 1
+          encodingType: Camera.EncodingType.JPEG,                   //保存的图片格式： JPEG = 0, PNG = 1
           targetWidth: 800,                                        //照片宽度
           targetHeight: 800,                                       //照片高度
-          mediaType:0,                                             //可选媒体类型：圖片=0，只允许选择图片將返回指定DestinationType的参数。 視頻格式=1，允许选择视频，最终返回 FILE_URI。ALLMEDIA= 2，允许所有媒体类型的选择。
-          cameraDirection:0,                                       //枪后摄像头类型：Back= 0,Front-facing = 1
+          mediaType: 0,                                             //可选媒体类型：圖片=0，只允许选择图片將返回指定DestinationType的参数。 視頻格式=1，允许选择视频，最终返回 FILE_URI。ALLMEDIA= 2，允许所有媒体类型的选择。
+          cameraDirection: 0,                                       //枪后摄像头类型：Back= 0,Front-facing = 1
           popoverOptions: CameraPopoverOptions,
           saveToPhotoAlbum: true                                   //保存进手机相册
         };
 
-        $cordovaCamera.getPicture(options).then(function(imageData) {
+        $cordovaCamera.getPicture(options).then(function (imageData) {
           $scope.imgSrc = imageData;
           $scope.images_list.push(imageData);
-        }, function(err) {
+        }, function (err) {
           // error
         });
 
@@ -568,26 +630,30 @@ angular.module('app.controllers', [])
   .controller('workCheckedCtrl', ['$scope', '$stateParams', '$ionicScrollDelegate',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-    function ($scope, $stateParams,$ionicScrollDelegate) {
-      //TODO:从服务器上下载工人提交的相关信息以及图片列表
-      $scope.workerInfo = {name:"王工",submitTime:"2016年10月11日 10点20分",avatar:"img/avatarImg.jpg"};
-      $scope.imgList = [{id:1,src:'img/checked/sd1.jpg'},
-        {id:2,src:'img/checked/sd2.jpg'},
-        {id:3,src:'img/checked/sd3.jpg'},
-        {id:4,src:'img/checked/sd4.jpg'}];
+    function ($scope, $stateParams, $ionicScrollDelegate) {
+      //楼盘工地所属小区的id-,以及用户信息从上一级页面获取
+      $scope.userInfo = $stateParams.userInfo;
+      $scope.siteInfo = $stateParams.siteInfo;
+
+      //TODO:《接口》从服务器上下载工人提交的相关信息以及图片列表
+      $scope.workerInfo = {name: "王工", submitTime: "2016年10月11日 10点20分", avatar: "img/avatarImg.jpg"};
+      $scope.imgList = [{id: 1, src: 'img/checked/sd1.jpg'},
+        {id: 2, src: 'img/checked/sd2.jpg'},
+        {id: 3, src: 'img/checked/sd3.jpg'},
+        {id: 4, src: 'img/checked/sd4.jpg'}];
       $scope.deleteImg = function (img) {
         //从列表中删除图片
         $scope.imgList.splice($scope.imgList.indexOf(img), 1);
-        //TODO:从服务器上删除图片
+        //TODO:《接口》从服务器上删除图片
 
         //重新绘制滚动页面的尺寸
         $ionicScrollDelegate.$getByHandle("checkedHandle").resize();
       };
       $scope.checked = function (v) {
         if (v == 0) {
-          //TODO:通过审核
-        }else {
-          //TODO:未通过审核
+          //TODO:《接口》通过审核
+        } else {
+          //TODO:《接口》未通过审核
         }
       }
     }])

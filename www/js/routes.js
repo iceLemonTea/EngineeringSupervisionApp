@@ -32,57 +32,58 @@ angular.module('app.routes', [])
         templateUrl: 'templates/account.html',
         controller: 'accountCtrl'
       })
-
       .state('createCommunity', {
         url: '/CreateCommunity',
+        params: {"userInfo": null},
         templateUrl: 'templates/createCommunity.html',
         controller: 'createCommunityCtrl'
       })
 
       .state('buildingSiteList', {
         url: '/ BuildingSiteList',
-        params: {"id": null},
+        params: {"id": null, "userInfo": null},
         templateUrl: 'templates/buildingSiteList.html',
         controller: 'buildingSiteListCtrl'
       })
 
       .state('createBuildingSite', {
         url: '/CreateBuildingSite',
-        params: {"id": null},
+        params: {"id": null, "userInfo": null},
         templateUrl: 'templates/createBuildingSite.html',
         controller: 'createBuildingSiteCtrl'
       })
 
       .state('workItemList', {
         url: '/WorkItemList',
-        params: {"id": null},
+        params: {"siteInfo": null, "userInfo": null},
         templateUrl: 'templates/workItemList.html',
         controller: 'workItemListCtrl'
       })
 
       .state('workerList', {
         url: '/WorkerList',
-        params: {"id": null, "siteId": null},
+        params: {"id": null, "siteInfo": null, "userInfo": null},
         templateUrl: 'templates/workerList.html',
         controller: 'workerListCtrl'
       })
 
       .state('createWorker', {
         url: '/CreateWorker',
+        params: {"siteInfo": null, "userInfo": null},
         templateUrl: 'templates/createWorker.html',
         controller: 'createWorkerCtrl'
       })
 
       .state('workDone', {
         url: '/WorkDone',
-        params: {"id": null, "siteProcess": null},
+        params: {"siteInfo": null, "userInfo": null},
         templateUrl: 'templates/workDone.html',
         controller: 'workDoneCtrl'
       })
 
       .state('workChecked', {
         url: '/WorkChecked',
-        params: {"id": null, "siteProcess": null},
+        params: {"siteInfo": null, "userInfo": null},
         templateUrl: 'templates/workChecked.html',
         controller: 'workCheckedCtrl'
       })

@@ -1,28 +1,28 @@
 <ion-view title="main" id="page1" style="background-color:#FCFCFC;">
-  <ion-nav-buttons side="left">
-    <button class="button button-assertive" ng-click="toCasesBtn()">
-      案例
-    </button>
-  </ion-nav-buttons>
-  <ion-nav-buttons side="right">
-    <button class="button button-assertive" ng-click="toAccountBtn()">
-      我的
-    </button>
-  </ion-nav-buttons>
+  <!--<ion-nav-buttons side="left">-->
+  <!--<button class="button button-assertive" ng-click="toCasesBtn()">-->
+  <!--案例-->
+  <!--</button>-->
+  <!--</ion-nav-buttons>-->
+  <!--<ion-nav-buttons side="right">-->
+  <!--<button class="button button-assertive" ng-click="toAccountBtn()">-->
+  <!--我的-->
+  <!--</button>-->
+  <!--</ion-nav-buttons>-->
   <ion-content padding="true" class="has-header">
     <ion-list id="main-list3">
       <ion-item class="item-icon-right" id="main-list-item3"><i class="titleP">小区列表</i>
-        <i class="icon ion-android-add" ui-sref="createCommunity"></i>
+        <i class="icon ion-android-add" ng-click="createCommunity()"></i>
       </ion-item>
       <ion-item class="item-thumbnail-left item-icon-right" id="main-list-item4" ng-repeat="item in items"
                 ng-click="communityItemClickBtn(item.id)">
         <img id="itemImg" src="{{item.img}}">
         <i class="commTitleP">{{item.name}}</i>
         <i class="addsP">{{item.adds}}</i>
+        <!--<p>{{item.adds}}</p>-->
         <i class="commDescTag" ng-repeat="tag in item.tag">{{tag.tag}}</i>
         <span class="badge badge-assertive">{{item.siteNum}}</span>
       </ion-item>
-      <button class="button" ng-click="login()">登录</button>
     </ion-list>
   </ion-content>
 </ion-view>

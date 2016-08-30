@@ -32,4 +32,23 @@ angular.module('app.services', [])
 
   .service('BlankService', [function () {
 
-  }]);
+  }])
+
+  .factory('LocalStorageService', function ($rootScope, $http) {
+    var service = {
+      getUserInfo: function () {//获取用户数据
+        var userInfo = localStorage.getItem("userInfo");
+        if (userInfo == null || userInfo == undefined) {
+          userInfo = 0;
+        }
+        return JSON.parse(userInfo);
+      },
+      setUserInfo: function (userInfo) {//保存用户信息数据
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      },
+      deleteInfoById: function () {//删除用户信息列表
+        localStorage.removeItem("userInfo");//删除
+      }
+    }
+    return service;
+  });
