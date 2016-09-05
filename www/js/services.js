@@ -44,6 +44,7 @@ angular.module('app.services', [])
         return JSON.parse(userInfo);
       },
       setUserInfo: function (userInfo) {//保存用户信息数据
+        localStorage.clear();
         localStorage.setItem("userInfo", JSON.stringify(userInfo));
       },
       deleteInfoById: function () {//删除用户信息列表

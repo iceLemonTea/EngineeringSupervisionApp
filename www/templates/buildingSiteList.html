@@ -7,7 +7,7 @@
   <ion-content padding="true" class="has-header">
     <ion-list id="buildingSiteList-list4">
       <ion-item class="item-icon-right" id="buildingSiteList-list-item5"><i class="titleP">装修工地</i>
-        <i class="icon ion-android-add" ng-click="createBuildingSiteBtn()"></i>
+        <i class="icon ion-android-add" ng-click="createBuildingSiteBtn()" ng-if="userInfo.userType == 1"></i>
       </ion-item>
       <ion-item class="item-thumbnail-left item-icon-right" id="main-list-item4"
                 ng-repeat="item in items"

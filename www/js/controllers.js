@@ -14,9 +14,6 @@ angular.module('app.controllers', [])
       };
       //TODO:检测本地是否已经登录，如果登录，则使用登录信息获取相应的用户信息和小区列表
       $scope.userInfo = LocalStorageService.getUserInfo();//0:工人：1：工长，根据用户类型设置后续的平台流程
-      if ($scope.userInfo == 0) {//本地没有用户登录数据
-        $scope.login();
-      }
       //TODO:《接口》根据用户ID，获取用户名下的小区列表
       //小区信息数组
       $scope.items = [{
@@ -54,6 +51,10 @@ angular.module('app.controllers', [])
         $state.go('account');
       };
 
+      //if ($scope.userInfo == 0) {//本地没有用户登录数据
+      $scope.login();
+      //}
+
     }])
 
   .controller('loginCtrl', ['$scope', '$stateParams', '$state', '$ionicHistory', 'LocalStorageService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -65,7 +66,7 @@ angular.module('app.controllers', [])
         userName: null,
         passwd: null,
         licsenceCode: null
-      }
+      };
 
       $scope.loginBtn = function () {
         if ($scope.user.passwd == null) {
@@ -77,7 +78,7 @@ angular.module('app.controllers', [])
         }
         //TODO:《接口》登陆接口获取相应参数
         //将用户数据本地持久化
-        $scope.userInfo = {name: $scope.user.userName, userType: "1"};
+        $scope.userInfo = {name: $scope.user.userName, userType: $scope.user.passwd};
         LocalStorageService.setUserInfo($scope.userInfo);
         //跳转到主页面
         $state.go('main', {}, {});
@@ -238,14 +239,15 @@ angular.module('app.controllers', [])
       });
     }])
 
-  .controller('buildingSiteListCtrl', ['$scope', '$stateParams', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+  .controller('buildingSiteListCtrl', ['$scope', '$stateParams', '$state','LocalStorageService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-    function ($scope, $stateParams, $state) {
+    function ($scope, $stateParams, $state, LocalStorageService) {
       //楼盘工地所属小区的id-,以及用户信息从上一级页面获取
       $scope.commId = $stateParams.id;
-      $scope.userInfo = $stateParams.userInfo;
-      //通过小区id，获取楼盘工地信息列表items
+      //$scope.userInfo = $stateParams.userInfo;
+      $scope.userInfo = LocalStorageService.getUserInfo();
+      //TODO:《接口》通过小区id，获取楼盘工地信息列表items
       $scope.items = [{
         id: 1,
         name: "英俊1期",
@@ -358,6 +360,10 @@ angular.module('app.controllers', [])
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
     function ($scope, $stateParams, $state, $ionicActionSheet, $timeout) {
+      //TODO:《配置参数》系统配置参数，用于控制工长分配工作流程
+      //hasWorker = true：则选中某一项目，进入工人选择页面，选中工人后，工人将在自己的app中上传工程进度图，同时工长也可以上传进度图，并完成审核
+      //hasWorker = false：工长选中某一待装修的项目后，直接进入工程进度图上传页面，由自己上传进度图，且该流程不需要审核。
+      $scope.hasWorker = false;
       //上一页面传递的参数
       $scope.siteInfo = $stateParams.siteInfo;
       $scope.userInfo = $stateParams.userInfo;
@@ -372,9 +378,18 @@ angular.module('app.controllers', [])
       //列表条目点击按钮
       $scope.workItemClickBtn = function (item) {
         if (item.isFinished == false) {//暂未施工的，将进入工人页面，挑选工人
-          $state.go('workerList', {id: item.id, siteInfo: $scope.siteInfo, user: $scope.userInfo}, {});
+          if ($scope.hasWorker == false) {
+            $state.go('workDone', {siteInfo: $scope.siteInfo, user: $scope.userInfo}, {})
+          } else {
+            $state.go('workerList', {id: item.id, siteInfo: $scope.siteInfo, user: $scope.userInfo}, {});
+          }
         } else {//施工完成，则弹出上拉菜单，选择上传图片还是审核
-          $scope.showActionSheet();
+          if ($scope.hasWorker == false) {
+            $scope.showReUploadImageActionSheet();
+          } else {
+            $scope.showActionSheet();
+          }
+
         }
       };
       $scope.showActionSheet = function () {
@@ -395,6 +410,30 @@ angular.module('app.controllers', [])
               $state.go('workDone', {siteInfo: $scope.siteInfo, user: $scope.userInfo}, {})
             } else if (index == 1) {//审核项目
               $state.go('workChecked', {siteInfo: $scope.siteInfo, user: $scope.userInfo}, {})
+            }
+            return true;
+          }
+        });
+        $timeout(function () {
+          hideSheet();
+        }, 2000);
+      };
+      //工长更新工程进度图
+      $scope.showReUploadImageActionSheet = function () {
+        //让工长选择上传图片，还是审核
+        var hideSheet = $ionicActionSheet.show({
+          buttons: [
+            {text: '<b>更新工程进度图片</b>'}
+          ],
+          //destructiveText: 'Delete',
+          titleText: '选择操作',
+          cancelText: 'Cancel',
+          cancel: function () {
+            // add cancel code..
+          },
+          buttonClicked: function (index) {
+            if (index == 0) {//上传图片
+              $state.go('workDone', {siteInfo: $scope.siteInfo, user: $scope.userInfo}, {})
             }
             return true;
           }
@@ -545,6 +584,8 @@ angular.module('app.controllers', [])
       $scope.imgSrc = "";
       $scope.isImageEmpty = true;
       $scope.addImage = function () {
+        var x = document.getElementById("addImage");
+        x.style.color = "Red";
         //让工长选择上传图片，还是审核
         var hideSheet = $ionicActionSheet.show({
           buttons: [
@@ -555,6 +596,7 @@ angular.module('app.controllers', [])
           titleText: '选择操作',
           cancelText: 'Cancel',
           cancel: function () {
+            x.style.color = "#09f";
             // add cancel code..
           },
           buttonClicked: function (index) {
@@ -563,6 +605,7 @@ angular.module('app.controllers', [])
             } else if (index == 1) {//从相册中选取
               $scope.pickImage();
             }
+            x.style.color = "#09f";
             return true;
           }
         });
@@ -572,12 +615,15 @@ angular.module('app.controllers', [])
 
       }
       //test for image list
-      $scope.listTest = function () {
-        var image = {id: $scope.imageNum, src: "../img/avatarImg.jpg"};
-        $scope.images_list.push(image);
-        $scope.imageNum++;
-        if ($scope.imageNum == 4) {
-          $scope.isImageEmpty = false;
+      $scope.addImageToList = function (imgSrc) {
+        if (imgSrc != null && imgSrc != undefined) {
+          var src = imgSrc;//"data:image/jpeg;base64," +
+          var image = {id: $scope.imageNum, src: src};
+          $scope.images_list.push(image);
+          $scope.imageNum++;
+          if ($scope.imageNum == 4) {
+            $scope.isImageEmpty = false;
+          }
         }
       };
       $scope.uploadImage = function () {
@@ -593,9 +639,10 @@ angular.module('app.controllers', [])
         };
         $cordovaImagePicker.getPictures(options)
           .then(function (results) {
-            console.log(results);
-            $scope.imgSrc = results[0];
-            $scope.images_list.push(results[0]);
+            //console.log(results);
+            //$scope.imgSrc = results[0];
+            //$scope.images_list.push("data:image/jpeg;base64,"+results[0]);
+            $scope.addImageToList(results[0]);
           }, function (error) {
             // error getting photos
           });
@@ -618,8 +665,9 @@ angular.module('app.controllers', [])
         };
 
         $cordovaCamera.getPicture(options).then(function (imageData) {
-          $scope.imgSrc = imageData;
-          $scope.images_list.push(imageData);
+          //$scope.imgSrc = imageData;
+          //$scope.images_list.push("data:image/jpeg;base64,"+imageData);
+          $scope.addImageToList(imageData);
         }, function (err) {
           // error
         });

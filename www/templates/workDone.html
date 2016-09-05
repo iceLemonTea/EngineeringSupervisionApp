@@ -5,10 +5,11 @@
       <a ng-repeat="img in images_list" type="item-text-wrap" style="background-image:url('{{ img.src }}');"
          class="eventListPicture">
       </a>
-      <div class="button button-clear"
-           style="width: 80px;height: 80px;max-height: 80px;background-image: url('../img/plus.png')"
-      ng-click="addImage()" ng-if="isImageEmpty">
-      </div>
+      <!--<div class="button button-clear"-->
+           <!--style="width: 80px;height: 80px;max-height: 80px;background-image: url('img/plus.png')"-->
+      <!--ng-click="addImage()" ng-if="isImageEmpty">-->
+      <!--</div>-->
+      <i id="addImage" class="icon ion-ios-plus-outline" style="font-size: 120px;color: #09f;padding-bottom: 10px" ng-click="addImage()" ng-if="isImageEmpty"></i>
     </div>
     <button class="button button-full button-balanced" ng-click="uploadImage()" ng-if="!isImageEmpty">
       上传

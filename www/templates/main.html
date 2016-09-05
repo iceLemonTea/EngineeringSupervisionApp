@@ -12,7 +12,7 @@
   <ion-content padding="true" class="has-header">
     <ion-list id="main-list3">
       <ion-item class="item-icon-right" id="main-list-item3"><i class="titleP">小区列表</i>
-        <i class="icon ion-android-add" ng-click="createCommunity()"></i>
+        <i class="icon ion-android-add" ng-click="createCommunity()" ng-if="userInfo.userType == 1"></i>
       </ion-item>
       <ion-item class="item-thumbnail-left item-icon-right" id="main-list-item4" ng-repeat="item in items"
                 ng-click="communityItemClickBtn(item.id)">

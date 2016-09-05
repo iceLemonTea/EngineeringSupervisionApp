@@ -134,13 +134,14 @@
 /*}*/
 
 .eventListPicture{
-  width:80px;
-  height:80px;
+  width:120px;
+  height:120px;
   display:inline-block;
   background-size: cover;
   color:#fff;
   text-decoration: none;
   margin-top: 10px;
+  margin-right: 25px;
 }
 .eventListPicture h2{
   font-size: 16px;
